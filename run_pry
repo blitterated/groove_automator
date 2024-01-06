@@ -1,0 +1,7 @@
+#!/usr/bin/bash -e
+
+pbb_path=`gem which pry-byebug`
+pbb_dir=`dirname "${pbb_path}"`
+pbb_file=`basename "${pbb_path}"`
+
+pry -r ./groove_automator.rb -I "${pbb_dir}" -r "${pbb_file}"
