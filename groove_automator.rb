@@ -30,110 +30,127 @@ class TimeSignature
         (subdiv / @beat_note) * @beats_per_measure
     end
 
-    # builds a hash of all time signatures available in GrooveScribe
+    def self.all
+        return @_all_time_signatures if defined? @_all_time_signatures
+        self.build_all
+    end
+
+    # Builds a hash of all time signatures available in GrooveScribe.
+    # Can also be used to invalidate memoized value in TimeSignature#all
     def self.build_all
-        (2..15).to_a
-            .product([2,4,8,16])
-            .map { |b,n| TimeSignature.new(beats_per_measure: b, beat_note: n) }
-            .map { |ts| [ts.name, ts] }
-            .to_h
+        @_all_time_signatures =
+            (2..15).to_a
+                .product([2,4,8,16])
+                .map { |b,n| TimeSignature.new(beats_per_measure: b, beat_note: n) }
+                .map { |ts| [ts.name, ts] }
+                .to_h
     end
 end
 
-require "ostruct"
+class Groove
+    attr_reader :time_signature, :subdivisions, :tempo,
+                :total_measures, :hihat, :snare,
+                :kick, :measures
 
-class Grooves
-    def initialize
-        @time_signatures = TimeSignature.build_all
+    def initialize(
+        time_sig: "4/4",
+        subdiv: 16,
+        tempo: 80,
+        total_measures: 16,
+        hihat: "x-x-",
+        snare: "----O---",
+        kick: "o-------"
+    )
+        @time_signature = TimeSignature.all[time_sig]
+
+        @subdivisions   = subdiv
+        @tempo          = tempo
+        @total_measures = total_measures
+
+        @hihat = Pattern.new(name: "Hi-Hat", pattern: hihat)
+        @snare = Pattern.new(name: "Snare", pattern: snare)
+        @kick  = Pattern.new(name: "Kick", pattern: kick)
+
+        @measures = { hh: "|", sd: "|", kd: "|" }
+
+        total_subdivs = @time_signature.subdivisions_per_measure(@subdivisions)
+        raise "No inifinite loops for you!" if @total_measures.nil? or total_subdivs.nil?
+
+        (1..@total_measures).each do
+            (1..total_subdivs).each do
+                @measures[:hh] += @hihat.next
+                @measures[:sd] += @snare.next
+                @measures[:kd] += @kick.next
+            end
+
+            @measures[:hh] += "|"
+            @measures[:sd] += "|"
+            @measures[:kd] += "|"
+        end
     end
 
-    def groove_1
-        groove = OpenStruct.new({
+    def URL
+        "http://localhost:8080/?" +
+        "TimeSig=#{@time_signature.name}&" +
+        "Div=#{@subdivisions}&" +
+        "Tempo=#{@tempo}&" +
+        "Measures=#{@total_measures}&" +
+        "H=#{@measures[:hh]}&" +
+        "S=#{@measures[:sd]}&" +
+        "K=#{@measures[:kd]}"
+    end
+end
+
+class GrooveBag
+    def self.groove_1
+        puts Groove.new(
             time_sig: "4/4",
             subdiv: 16,
             tempo: 80,
-            measures: 16,
-            hh: "s-x-",
-            sn: "-gg-O--g-gg-O--g-gg-O--g-gg-O-g",
-            kd: "o--o----o--o----o--o----o--o---"
-        })
-
-        high_hat_pattern =   Pattern.new(name: "Hi-Hat", pattern: groove.hh)
-        snare_drum_pattern = Pattern.new(name: "Snare", pattern: groove.sn)
-        kick_drum_pattern =  Pattern.new(name: "Kick", pattern: groove.kd)
-
-        measures = OpenStruct.new({
-            hh: "|",
-            sd: "|",
-            kd: "|"
-        })
-
-        ts = @time_signatures[groove.time_sig]
-
-        (1..groove.measures).each do
-            (1..ts.subdivisions_per_measure(groove.subdiv)).each do
-                measures.hh += high_hat_pattern.next
-                measures.sd += snare_drum_pattern.next
-                measures.kd += kick_drum_pattern.next
-            end
-
-            measures.hh += "|"
-            measures.sd += "|"
-            measures.kd += "|"
-        end
-
-        "http://localhost:8080/?" +
-        "TimeSig=#{groove.time_sig}&" +
-        "Div=#{groove.subdiv}&" +
-        "Tempo=#{groove.tempo}&" +
-        "Measures=#{groove.measures}&" +
-        "H=#{measures.hh}&" +
-        "S=#{measures.sd}&" +
-        "K=#{measures.kd}"
+            total_measures: 16,
+            hihat: "s-x-",
+            snare: "-gg-O--g-gg-O--g-gg-O--g-gg-O-g",
+            kick: "o--o----o--o----o--o----o--o---"
+        ).URL
+        ""
     end
 
-    def groove_2
-        groove = OpenStruct.new({
+    def self.groove_2
+        puts Groove.new(
             time_sig: "4/4",
             subdiv: 16,
             tempo: 80,
-            measures: 18,
-            hh: "s-x-",
-            sn: "-gg-O--g-gg-O--g-gg-O--g-gg-O---g",
-            kd: "o--o----o--o----o--o----o--o-----"
-        })
+            total_measures: 18,
+            hihat: "s-x-",
+            snare: "-gg-O--g-gg-O--g-gg-O--g-gg-O---g",
+            kick:  "o--o----o--o----o--o----o--o-----"
+        ).URL
+        ""
+    end
 
-        high_hat_pattern =   Pattern.new(name: "Hi-Hat", pattern: groove.hh)
-        snare_drum_pattern = Pattern.new(name: "Snare", pattern: groove.sn)
-        kick_drum_pattern =  Pattern.new(name: "Kick", pattern: groove.kd)
+    def self.groove_3
+        puts Groove.new(
+            time_sig: "4/4",
+            subdiv: 16,
+            tempo: 80,
+            total_measures: 16,
+            hihat: "s-x-X-x-X-x-X-x-",
+            snare: "----O-------O--",
+            kick: "o-----o-o------"
+        ).URL
+        ""
+    end
 
-        measures = OpenStruct.new({
-            hh: "|",
-            sd: "|",
-            kd: "|"
-        })
-
-        ts = @time_signatures[groove.time_sig]
-
-        (1..groove.measures).each do
-            (1..ts.subdivisions_per_measure(groove.subdiv)).each do
-                measures.hh += high_hat_pattern.next
-                measures.sd += snare_drum_pattern.next
-                measures.kd += kick_drum_pattern.next
-            end
-
-            measures.hh += "|"
-            measures.sd += "|"
-            measures.kd += "|"
-        end
-
-        "http://localhost:8080/?" +
-        "TimeSig=#{groove.time_sig}&" +
-        "Div=#{groove.subdiv}&" +
-        "Tempo=#{groove.tempo}&" +
-        "Measures=#{groove.measures}&" +
-        "H=#{measures.hh}&" +
-        "S=#{measures.sd}&" +
-        "K=#{measures.kd}"
+    def self.groove_4
+        puts Groove.new(
+            time_sig: "4/4",
+            subdiv: 16,
+            tempo: 80,
+            total_measures: 18,
+            hihat: "s-x-X-x-X-x-X-x-",
+            snare: "----O-------O----",
+            kick: "o-----o-o--------"
+        ).URL
+        ""
     end
 end
