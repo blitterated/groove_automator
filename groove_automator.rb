@@ -86,7 +86,6 @@ class Groove
   end
 
   def _generate_measures
-
     total_subdivs = @time_signature.subdivisions_per_measure(@subdivisions)
     raise "No inifinite loops for you!" if @total_measures.nil? or total_subdivs.nil?
 
@@ -129,33 +128,7 @@ class Groove
 end
 
 class GrooveBag
-  def self.groove_1
-    puts Groove.new(
-      time_sig: "4/4",
-      subdiv: 16,
-      tempo: 110,
-      total_measures: 16,
-      hihat: "s-x-",
-      snare: "-gg-O--g-gg-O--g|-gg-O--g-gg-O-g",
-      kick:  "o--o----o--o----|o--o----o--o---"
-    ).URL
-    ""
-  end
-
-  def self.groove_2
-    puts Groove.new(
-      time_sig: "4/4",
-      subdiv: 16,
-      tempo: 110,
-      total_measures: 18,
-      hihat: "s-x-",
-      snare: "-gg-O--g-gg-O--g|-gg-O--g-gg-O---g",
-      kick:  "o--o----o--o----|o--o----o--o-----"
-    ).URL
-    ""
-  end
-
-  def self.groove_3
+  def self.groove_2a
     puts Groove.new(
       title: "Modulation Etude #2.a",
       author: "Stick Twisters",
@@ -171,7 +144,7 @@ class GrooveBag
     ""
   end
 
-  def self.groove_4
+  def self.groove_2b
     puts Groove.new(
       title: "Modulation Etude #2.b",
       author: "Stick Twisters",
@@ -183,6 +156,38 @@ class GrooveBag
       hihat: "s-x-X-x-X-x-X-x-",
       snare: "----O-------O---|----O-------O---|-",
       kick:  "o-----o-o-------|o-----o-o-------|-"
+    ).URL
+    ""
+  end
+
+  def self.groove_69a
+    puts Groove.new(
+#      title: "Modulation Etude #69.a",
+#      author: "Stick Twisters",
+#      comments: "A sinistra",
+      time_sig: "4/4",
+      subdiv: 16,
+      tempo: 110,
+      total_measures: 16,
+      hihat: "s-x-",
+      snare: "-gg-O--g-gg-O--g|-gg-O--g-gg-O-g",
+      kick:  "o--o----o--o----|o--o----o--o---"
+    ).URL
+    ""
+  end
+
+  def self.groove_69b
+    puts Groove.new(
+#      title: "Modulation Etude #69.a",
+#      author: "Stick Twisters",
+#      comments: "A destra",
+      time_sig: "4/4",
+      subdiv: 16,
+      tempo: 110,
+      total_measures: 18,
+      hihat: "s-x-",
+      snare: "-gg-O--g-gg-O--g|-gg-O--g-gg-O---g",
+      kick:  "o--o----o--o----|o--o----o--o-----"
     ).URL
     ""
   end
