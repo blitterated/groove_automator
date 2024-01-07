@@ -1,3 +1,5 @@
+require "uri"
+
 class Pattern
   def initialize(name:, pattern:)
     @index = 0
@@ -48,19 +50,26 @@ class TimeSignature
 end
 
 class Groove
-  attr_reader :time_signature, :subdivisions, :tempo,
-    :total_measures, :hihat, :snare,
+  attr_reader :title, :author, :comments, :time_signature,
+    :subdivisions, :tempo, :total_measures, :hihat, :snare,
     :kick, :measures
 
   def initialize(
+    title: nil,
+    author: nil,
+    comments: nil,
     time_sig: "4/4",
     subdiv: 16,
-    tempo: 80,
-    total_measures: 16,
+    tempo: 110,
+    total_measures: 2,
     hihat: "x-x-",
     snare: "----O---",
     kick: "o-------"
   )
+    @title = title
+    @author = author
+    @comments = comments
+
     @time_signature = TimeSignature.all[time_sig]
 
     @subdivisions   = subdiv
@@ -72,6 +81,8 @@ class Groove
     @kick  = Pattern.new(name: "Kick", pattern: kick)
 
     @measures = _generate_measures
+
+    @uri_parser = URI::Parser.new
   end
 
   def _generate_measures
@@ -96,10 +107,19 @@ class Groove
     measures
   end
 
+  # URL encode for GrooveScribe
+  def URL_encode(qs_key, encodee)
+    return "" if encodee.nil? or encodee.strip.empty?
+    "#{qs_key}=#{@uri_parser.escape(encodee)}&"
+  end
+
   def URL
     "http://localhost:8080/?" +
       "TimeSig=#{@time_signature.name}&" +
       "Div=#{@subdivisions}&" +
+      URL_encode("Title", @title) +
+      URL_encode("Author", @author) +
+      URL_encode("Comments", @comments) +
       "Tempo=#{@tempo}&" +
       "Measures=#{@total_measures}&" +
       "H=#{@measures[:hh]}&" +
@@ -137,6 +157,9 @@ class GrooveBag
 
   def self.groove_3
     puts Groove.new(
+      title: "Modulation Etude #2.a",
+      author: "Stick Twisters",
+      comments: "A sinistra",
       time_sig: "4/4",
       subdiv: 16,
       tempo: 110,
@@ -150,6 +173,9 @@ class GrooveBag
 
   def self.groove_4
     puts Groove.new(
+      title: "Modulation Etude #2.b",
+      author: "Stick Twisters",
+      comments: "A destra",
       time_sig: "4/4",
       subdiv: 16,
       tempo: 110,
