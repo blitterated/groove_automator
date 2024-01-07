@@ -191,4 +191,52 @@ class GrooveBag
     ).URL
     ""
   end
+
+  def self.groove_345a
+    puts Groove.new(
+      title: "Groove 3-4-5a",
+      author: "Stick Twisters",
+      comments: "Contorto come un vecchio albero",
+      time_sig: "4/4",
+      subdiv: 16,
+      tempo: 110,
+      total_measures: 15,
+      hihat: "b-r-r",
+      snare: "----O---",
+      kick:  "X--ox-o-xo--"
+    ).URL
+    ""
+  end
+
+  def self.groove_345b
+    puts Groove.new(
+      title: "Groove 3-4-5b",
+      author: "Stick Twisters",
+      comments: "Contorto come un vecchio albero",
+      time_sig: "4/4",
+      subdiv: 16,
+      tempo: 110,
+      total_measures: 15,
+      hihat: "b-rr-",
+      snare: "----O---",
+      kick:  "X--ox-o-xo--"
+    ).URL
+    ""
+  end
+
+  def self.groove_345c
+    puts Groove.new(
+      title: "Groove 3-4-5c",
+      author: "Stick Twisters",
+      comments: "Contorto come un vecchio albero",
+      time_sig: "4/4",
+      subdiv: 16,
+      tempo: 110,
+      total_measures: 15,
+      hihat: "r-b-",
+      snare: "-gg-O",
+      kick:  "X--ox-o-xo--"
+    ).URL
+    ""
+  end
 end
