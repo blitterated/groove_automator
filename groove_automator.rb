@@ -2,7 +2,7 @@ class Pattern
   def initialize(name:, pattern:)
     @index = 0
     @name = name
-    @pattern = pattern.each_char.map {|c| c}
+    @pattern = pattern.delete('|').chars
   end
 
   def next
@@ -71,22 +71,29 @@ class Groove
     @snare = Pattern.new(name: "Snare", pattern: snare)
     @kick  = Pattern.new(name: "Kick", pattern: kick)
 
-    @measures = { hh: "|", sd: "|", kd: "|" }
+    @measures = _generate_measures
+  end
+
+  def _generate_measures
 
     total_subdivs = @time_signature.subdivisions_per_measure(@subdivisions)
     raise "No inifinite loops for you!" if @total_measures.nil? or total_subdivs.nil?
 
+    measures = { hh: "|", sd: "|", kd: "|" }
+
     (1..@total_measures).each do
       (1..total_subdivs).each do
-        @measures[:hh] += @hihat.next
-        @measures[:sd] += @snare.next
-        @measures[:kd] += @kick.next
+        measures[:hh] += @hihat.next
+        measures[:sd] += @snare.next
+        measures[:kd] += @kick.next
       end
 
-      @measures[:hh] += "|"
-      @measures[:sd] += "|"
-      @measures[:kd] += "|"
+      measures[:hh] += "|"
+      measures[:sd] += "|"
+      measures[:kd] += "|"
     end
+
+    measures
   end
 
   def URL
@@ -106,11 +113,11 @@ class GrooveBag
     puts Groove.new(
       time_sig: "4/4",
       subdiv: 16,
-      tempo: 80,
+      tempo: 110,
       total_measures: 16,
       hihat: "s-x-",
-      snare: "-gg-O--g-gg-O--g-gg-O--g-gg-O-g",
-      kick: "o--o----o--o----o--o----o--o---"
+      snare: "-gg-O--g-gg-O--g|-gg-O--g-gg-O-g",
+      kick:  "o--o----o--o----|o--o----o--o---"
     ).URL
     ""
   end
@@ -119,11 +126,11 @@ class GrooveBag
     puts Groove.new(
       time_sig: "4/4",
       subdiv: 16,
-      tempo: 80,
+      tempo: 110,
       total_measures: 18,
       hihat: "s-x-",
-      snare: "-gg-O--g-gg-O--g-gg-O--g-gg-O---g",
-      kick:  "o--o----o--o----o--o----o--o-----"
+      snare: "-gg-O--g-gg-O--g|-gg-O--g-gg-O---g",
+      kick:  "o--o----o--o----|o--o----o--o-----"
     ).URL
     ""
   end
@@ -132,11 +139,11 @@ class GrooveBag
     puts Groove.new(
       time_sig: "4/4",
       subdiv: 16,
-      tempo: 80,
-      total_measures: 16,
+      tempo: 110,
+      total_measures: 32,
       hihat: "s-x-X-x-X-x-X-x-",
-      snare: "----O-------O--",
-      kick: "o-----o-o------"
+      snare: "----O-------O---|----O-------O--",
+      kick:  "o-----o-o-------|o-----o-o------"
     ).URL
     ""
   end
@@ -145,11 +152,11 @@ class GrooveBag
     puts Groove.new(
       time_sig: "4/4",
       subdiv: 16,
-      tempo: 80,
-      total_measures: 18,
+      tempo: 110,
+      total_measures: 34,
       hihat: "s-x-X-x-X-x-X-x-",
-      snare: "----O-------O----",
-      kick: "o-----o-o--------"
+      snare: "----O-------O---|----O-------O---|-",
+      kick:  "o-----o-o-------|o-----o-o-------|-"
     ).URL
     ""
   end
