@@ -49,6 +49,36 @@ class TimeSignature
   end
 end
 
+class GrooveScribeGlyphs
+  class Hihat
+    HH_NORMAL='x'
+    HH_OPEN='o'
+    HH_ACCENT='X'
+    CRASH='c'
+    RIDE='r'
+    RIDE_BELL='b'
+    COWBELL='m'
+    STACKER='s'
+    CLICK='n'
+    CLICK_ACCENT='N'
+  end
+
+  class Snare
+    NORMAL='o'
+    ACCENT='O'
+    GHOST='g'
+    CROSS_STICK='x'
+    BUZZ='b'
+    FLAM='f'
+  end
+
+  class Kick
+    KICK='o'
+    HAT='x'
+    BOTH='X'
+  end
+end
+
 class Groove
   attr_reader :title, :author, :comments, :time_signature,
     :subdivisions, :tempo, :total_measures, :hihat, :snare,
@@ -71,6 +101,7 @@ class Groove
     @comments = comments
 
     @time_signature = TimeSignature.all[time_sig]
+    binding.b
 
     @subdivisions   = subdiv
     @tempo          = tempo
@@ -124,6 +155,40 @@ class Groove
       "H=#{@measures[:hh]}&" +
       "S=#{@measures[:sd]}&" +
       "K=#{@measures[:kd]}"
+  end
+
+  def remove_kick_on_snare
+    snare_glyphs = [
+      GrooveScribeGlyphs::Snare::NORMAL,
+      GrooveScribeGlyphs::Snare::ACCENT,
+      GrooveScribeGlyphs::Snare::CROSS_STICK,
+      GrooveScribeGlyphs::Snare::FLAM
+    ]
+
+    kick_glyphs = [
+      GrooveScribeGlyphs::Kick::KICK,
+      GrooveScribeGlyphs::Kick::BOTH
+    ]
+
+    snare_hits = @measures[:sd].chars
+    kicks = @measures[:kd].chars
+    new_kicks = ""
+
+    binding.b #DELETEME
+    snare_hits.each_with_index do |sd_glyph, idx|
+      kd_glyph = kicks[idx]
+
+      new_kicks +=
+        (snare_glyphs.include?(sd_glyph) and
+        kick_glyphs.include?(kd_glyph)) ?
+        '-' :
+        kicks[idx]
+
+      @measures[:kd] = new_kicks
+
+      self
+    end
+
   end
 end
 
@@ -225,17 +290,49 @@ class GrooveBag
   end
 
   def self.groove_345c
-    puts Groove.new(
-      title: "Groove 3-4-5c",
-      author: "Stick Twisters",
-      comments: "Contorto come un vecchio albero",
+    puts groove.new(
+      title: "groove 3-4-5c",
+      author: "stick twisters",
+      comments: "contorto come un vecchio albero",
       time_sig: "4/4",
       subdiv: 16,
       tempo: 110,
       total_measures: 15,
       hihat: "r-b-",
-      snare: "-gg-O",
-      kick:  "X--ox-o-xo--"
+      snare: "-gg-o",
+      kick:  "x--ox-o-xo--"
+    ).remove_kick_on_snare.url
+    ""
+  end
+
+  def self.groove_bd_in_9_44
+    puts Groove.new(
+      title: "Groove with 9 figure in RF in 4/4",
+      author: "Stick Twisters",
+      comments: "Contorto come un vecchio albero",
+      time_sig: "4/4",
+      subdiv: 16,
+      tempo: 110,
+      total_measures: 18,
+      hihat: "Xxxx",
+      snare: "----O---",
+      kick:  "o---oo---"
+    ).URL
+    ""
+  end
+
+  def self.groove_bd_in_9_94
+    puts Groove.new(
+      title: "Groove with 9 figure in RF in 4/4",
+      author: "Stick Twisters",
+      comments: "Contorto come un vecchio albero",
+      time_sig: "9/4",
+      subdiv: 16,
+      tempo: 110,
+      total_measures: 2,
+      hihat: "Xxxx",
+      snare: "----O---",
+      kick:  "o---oo---"
     ).URL
     ""
   end
