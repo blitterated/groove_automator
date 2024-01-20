@@ -84,4 +84,13 @@ if defined?(PryByebug)
   end
 end
 
-load "./groove_automator.rb"
+#groove_path = File.expand_path(“grooves”, __FILE__)
+#$LOAD_PATH.unshift(groove_path) unless $LOAD_PATH.include?(groove_path)
+["lib", "grooves"]. each do |path|
+  $LOAD_PATH.unshift(path) unless $LOAD_PATH.include?(path)
+end
+
+require "gs_groove_automator"
+
+require "groove_bag"
+include GrooveBag
