@@ -22,7 +22,6 @@ class Groove
     @comments = comments
 
     @time_signature = TimeSignature.all[time_sig]
-    binding.b
 
     @subdivisions   = subdiv
     @tempo          = tempo

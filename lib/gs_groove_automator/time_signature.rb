@@ -4,7 +4,7 @@ class TimeSignature
   def initialize(beats_per_measure: 4, beat_note: 4)
     @name = "#{beats_per_measure}/#{beat_note}"
     @beats_per_measure = beats_per_measure
-    @beat_note = beats_per_measure
+    @beat_note = beat_note
   end
 
   def subdivisions_per_measure(subdiv)
