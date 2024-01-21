@@ -131,13 +131,29 @@ module GrooveBag
 
   def groove_bd_in_9_94
     puts Groove.new(
-      title: "Groove with 9 figure in RF in 4/4",
+      title: "Groove with 9 figure in RF in 9/4",
       author: "Stick Twisters",
       comments: "Contorto come un vecchio albero",
       time_sig: "9/4",
       subdiv: 16,
       tempo: 110,
       total_measures: 2,
+      hihat: "Xxxx",
+      snare: "----O---",
+      kick:  "o---oo---"
+    ).URL
+    ""
+  end
+
+  def groove_bd_in_9_34
+    puts Groove.new(
+      title: "Groove with 9 figure in RF in 3/4",
+      author: "Stick Twisters",
+      comments: "Contorto come un vecchio albero",
+      time_sig: "3/4",
+      subdiv: 16,
+      tempo: 110,
+      total_measures: 6,
       hihat: "Xxxx",
       snare: "----O---",
       kick:  "o---oo---"
