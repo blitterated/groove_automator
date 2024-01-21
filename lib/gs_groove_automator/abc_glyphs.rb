@@ -1,4 +1,4 @@
-class GrooveScribeGlyphs
+class ABCGlyphs
   class Hihat
     HH_NORMAL='x'
     HH_OPEN='o'

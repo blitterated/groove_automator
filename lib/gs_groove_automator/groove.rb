@@ -80,15 +80,15 @@ class Groove
 
   def remove_kick_on_snare
     snare_glyphs = [
-      GrooveScribeGlyphs::Snare::NORMAL,
-      GrooveScribeGlyphs::Snare::ACCENT,
-      GrooveScribeGlyphs::Snare::CROSS_STICK,
-      GrooveScribeGlyphs::Snare::FLAM
+      ABCGlyphs::Snare::NORMAL,
+      ABCGlyphs::Snare::ACCENT,
+      ABCGlyphs::Snare::CROSS_STICK,
+      ABCGlyphs::Snare::FLAM
     ]
 
     kick_glyphs = [
-      GrooveScribeGlyphs::Kick::KICK,
-      GrooveScribeGlyphs::Kick::BOTH
+      ABCGlyphs::Kick::KICK,
+      ABCGlyphs::Kick::BOTH
     ]
 
     snare_hits = @measures[:sd].chars
