@@ -1,5 +1,3 @@
-require "gs_groove_automator"
-
 module GrooveBag
   def groove_2a
     puts Groove.new(
