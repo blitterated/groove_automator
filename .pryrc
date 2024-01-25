@@ -1,6 +1,25 @@
 require "debug"
 #require "pry-byebug"
 
+# Changes shell command leader from '.' to another character or string
+def change_shell_command_leader(new_leader)
+  match = /\.(.*)/
+  shell_cmd = Pry::Commands.to_h[match]
+  new_match = /#{new_leader}(.*)/
+  new_options = {
+     description: shell_cmd.description.gsub("'.'", "'#{new_leader}'"),
+     banner: shell_cmd.banner.gsub(/\.([^\n])/, "#{new_leader}\\1"),
+     command_options: shell_cmd.command_options.dup.tap do |co|
+                        co[:listing] = "#{new_leader}<shell command>"
+                      end,
+  }
+  Pry::Commands.rename_command(new_match, match, new_options)
+end
+
+# Change shell command leader from '.' to ','
+change_shell_command_leader(',')
+
+# History command aliases
 Pry.config.commands.alias_command "h20", "hist -T 20", desc: "Last 20 commands"
 Pry.config.commands.alias_command "hg", "hist -T 20 -G", desc: "Up to 20 commands matching expression"
 Pry.config.commands.alias_command "hG", "hist -G", desc: "Commands matching expression ever used"
@@ -10,14 +29,6 @@ if defined?(DEBUGGER__)
   puts "ruby/debugger loaded."
 
   class DEBUGGER__::Session
-    def register_my_command *names, repeat: nil, unsafe: nil,
-                            cancel_auto_continue: nil, postmortem: nil,
-                             &b
-      register_command *names, repeat, unsafe,
-                       cancel_auto_continue, postmortem,
-                       &b
-    end
-
     def clone_command(cmd_name)
       cmd = @commands[cmd_name]
 
@@ -32,10 +43,14 @@ if defined?(DEBUGGER__)
     end
   end
 
-  DEBUGGER__::SESSION.register_my_command 'hw', "helloworld",
-                      repeat: false, unsafe: true, cancel_auto_continue: false, postmortem: true do |arg|
-    puts "Hello world!"
-  end
+  DEBUGGER__::SESSION.send(:register_command,
+                           'hw', "helloworld",
+                           repeat: false,
+                           unsafe: true,
+                           cancel_auto_continue: false,
+                           postmortem: true) do |arg|
+                                               puts "Hello world!"
+                                             end
 end
 
 if defined?(PryByebug)
