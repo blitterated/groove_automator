@@ -96,18 +96,18 @@ module GrooveBag
   end
 
   def groove_345c
-    puts groove.new(
-      title: "groove 3-4-5c",
-      author: "stick twisters",
-      comments: "contorto come un vecchio albero",
+    puts Groove.new(
+      title: "Groove 3-4-5c",
+      author: "Stick Twisters",
+      comments: "Contorto come un vecchio albero",
       time_sig: "4/4",
       subdiv: 16,
       tempo: 110,
       total_measures: 15,
       hihat: "r-b-",
-      snare: "-gg-o",
-      kick:  "x--ox-o-xo--"
-    ).remove_kick_on_snare.url
+      snare: "-gg-O",
+      kick:  "X--ox-o-xo--"
+    ).remove_kick_on_snare.URL
     ""
   end
 
