@@ -3,24 +3,29 @@
 
 class ABCGlyphs
 
+  @@blank_glyph = "-".freeze
+
   @@glyph_tree = {
     hihat: {
       normal: "x",
       open:   "o",
-      accent: "X"
+      accent: "X",
+      blank: @@blank_glyph
     },
 
     cymbal: {
       crash: "c",
       ride: "r",
-      bell: "b"
+      bell: "b",
+      blank: @@blank_glyph
     },
 
     perc: {
       cowbell: "m",
       stacker: "s",
       click: "n",
-      click_accent: "N"
+      click_accent: "N",
+      blank: @@blank_glyph
     },
 
     snare: {
@@ -29,13 +34,33 @@ class ABCGlyphs
        ghost: "g",
        cross_stick: "x",
        buzz: "b",
-       flam: "f"
+       flam: "f",
+      blank: @@blank_glyph
     },
 
     pedal: {
       kick: "o",
       hat: "x",
-      both: "X"
+      both: "X",
+      blank: @@blank_glyph
+    },
+
+    tom1: {
+      normal: "o",
+      blank: @@blank_glyph
+    },
+
+    tom2: {
+      normal: "o",
+      blank: @@blank_glyph
+    },
+
+    stickings: {
+      right: "R",
+      left: "L",
+      both: "B",
+      count: "c",
+      blank: @@blank_glyph
     }
   }
 

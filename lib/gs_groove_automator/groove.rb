@@ -75,7 +75,7 @@ class Groove
       new_kicks +=
         (snare_glyphs.include?(sd_glyph) and
         kick_glyphs.include?(kd_glyph)) ?
-        '-' :
+        ABCGlyphs.pedal.blank :
         kicks[idx]
 
       @measures[:kd] = new_kicks
